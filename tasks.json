@@ -1,0 +1,22 @@
+[
+  { "nom": "Acheter du lait", "statut": 1 },
+  { "nom": "Répondre aux emails", "statut": 1 },
+  { "nom": "Préparer la réunion", "statut": 1 },
+  { "nom": "Faire du sport", "statut": 1 },
+  { "nom": "Lire un livre", "statut": 1 },
+  { "nom": "Sortir les poubelles", "statut": 1 },
+  { "nom": "Coder une nouvelle fonctionnalité", "statut": 1 },
+  { "nom": "Rédiger un rapport", "statut": 1 },
+  { "nom": "Réviser pour l'examen", "statut": 1 },
+  { "nom": "Planifier les vacances", "statut": 1 },
+  { "nom": "Passer un appel important", "statut": 1 },
+  { "nom": "Faire les courses", "statut": 1 },
+  { "nom": "Tondre la pelouse", "statut": 1 },
+  { "nom": "Envoyer une facture", "statut": 1 },
+  { "nom": "Organiser les fichiers", "statut": 1 },
+  { "nom": "Réparer le robinet", "statut": 1 },
+  { "nom": "Regarder un tutoriel", "statut": 1 },
+  { "nom": "Faire une sauvegarde des données", "statut": 1 },
+  { "nom": "Réserver un restaurant", "statut": 1 },
+  { "nom": "Faire le ménage", "statut": 1 }
+]
