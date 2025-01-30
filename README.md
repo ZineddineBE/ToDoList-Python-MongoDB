@@ -22,7 +22,12 @@ Avant d'exécuter l'application, assurez-vous d'avoir installé :
 - **Python 3.x**  
 - **MongoDB** (installé et en cours d'exécution)  
 - **MongoDB Compass** (optionnel, pour visualiser et gérer les données plus facilement)  
-- Bibliothèques Python nécessaires : `pymongo`, `datetime`, `os`, `webbrowser`, `time`
+- Les **bibliothèques Python** suivantes :
+  - `pymongo` (pour la connexion à MongoDB)
+  - `os` (pour la gestion des variables d'environnement)
+  - `time` (pour gérer les temporisations)
+  - `webbrowser` (pour ouvrir des liens web)
+  - `datetime` (pour gérer les dates)
 
 ---
 
