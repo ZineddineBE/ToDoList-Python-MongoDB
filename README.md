@@ -1,6 +1,6 @@
 # 📝 ToDoList-Python-MongoDB
 
-Une application simple et efficace de gestion de **To-Do List** en **Python** avec **MongoDB**, permettant d'**ajouter, modifier, compléter, supprimer et afficher** des tâches facilement.
+Une application simple et efficace de gestion de **To-Do List** en **Python** avec **MongoDB**, permettant d'**afficher, ajouter, modifier, compléter et supprimer** des tâches facilement.
 
 ---
 
@@ -13,11 +13,7 @@ Une application simple et efficace de gestion de **To-Do List** en **Python** av
 ✔️ Modifier des tâches existantes  
 ✔️ Marquer une tâche comme terminée  
 ✔️ Supprimer des tâches  
-<<<<<<< HEAD
-✔️ Stockage persistant des tâches dans **MongoDB**  
-=======
 ✔️ Stockage persistant des tâches dans **MongoDB** 
->>>>>>> 52e58523e62602ab473943fa8e97b6816cfb2fb3
 
 ---
 
