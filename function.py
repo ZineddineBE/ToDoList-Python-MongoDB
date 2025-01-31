@@ -1,6 +1,5 @@
 import connectiondb as dbTask
 import datetime as dt
-import os
 import webbrowser
 import time
 
@@ -13,7 +12,26 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 
 # Affiche toutes les taches
-def displayTasks(tasks):
+def displayTask():
+    task_name = input(f"{BOLD}Quelle est la tâche que vous voulez afficher ?{RESET}\n")
+    while not(dbTask.tasks_collection.find_one({"nom": task_name})):
+        print(f"\n{WARNING}Cette tâche n'existe pas... Veuillez choisir une tâche qui existe{RESET} 👀\n")
+        task_name = input(f"Quelle est la tâche que vous voulez afficher ?\n")
+
+    task = dbTask.tasks_collection.find_one({"nom": task_name})
+    match task["statut"]:
+        case 1:
+            status = "à faire"
+        case 2:
+            status = "en cours"
+        case 3:
+            status = "terminé"
+    print("--------------------------------------------------")
+    print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status})")
+    print("--------------------------------------------------\n")
+
+# Affiche toutes les taches
+def displayAllTasks(tasks):
     status = ""
     for task in tasks:
         match task["statut"]:
@@ -52,36 +70,36 @@ def displayTasksChoice(tasks, choice):
 # Ajouter une tâche avec le statut 'à faire' par défaut
 def addTask():
 
-    nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ? ➕{RESET}\n")
+    task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ? ➕{RESET}\n")
     
-    while (dbTask.tasks_collection.find_one({"nom": nomTask})):
+    while (dbTask.tasks_collection.find_one({"nom": task_name})):
         print(f"\n{WARNING}Cette tâche existe déjà... Ajoutez-en une nouvelle qui n'existe pas{RESET} 👀\n")
-        nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET}\n")
+        task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET}\n")
 
     newTask = {
-        "nom": nomTask,
+        "nom": task_name,
         "statut": 1
     }
     
     dbTask.tasks_collection.insert_one(newTask)
-    print(f"\n{GREEN}La tâche {nomTask} a été ajouté !{RESET} ✔")
+    print(f"\n{GREEN}La tâche {task_name} a été ajouté !{RESET} ✔")
         
 # Ajouter une tâche avec un statut au choix
 def addTaskWithStatus():
 
-    nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET} ➕\n")
+    task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET} ➕\n")
     
-    while (dbTask.tasks_collection.find_one({"nom": nomTask})):
+    while (dbTask.tasks_collection.find_one({"nom": task_name})):
         print(f"\n{WARNING}Cette tâche existe déjà... Ajoutez-en une nouvelle qui n'existe pas{RESET} 👀\n")
-        nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET}\n")
+        task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez ajouter ?{RESET}\n")
     
     statutTask = int(input(f"\n{BOLD}Quel est le statut de la tâche que vous voulez ajouter ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
     while (statutTask <1 or statutTask >3):
             print(f"\n{WARNING}Le statut de la tâche doit être compris entre 1 et 3{RESET}\n")
-            statutTask = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {nomTask} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
+            statutTask = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {task_name} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
 
     newTask = {
-        "nom": nomTask,
+        "nom": task_name,
         "statut": statutTask
     }
     
@@ -90,83 +108,84 @@ def addTaskWithStatus():
 
 # Supprimer une tâche
 def deleteTask():
-        nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez supprimer ?{RESET} ❌\n")
+        task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez supprimer ?{RESET} ❌\n")
 
-        while not(dbTask.tasks_collection.find_one({"nom": nomTask})):
+        while not(dbTask.tasks_collection.find_one({"nom": task_name})):
             print(f"\n{WARNING}Cette tâche n'existe pas... Veuillez choisir une tâche qui existe pour la supprimer{RESET} 👀\n")
-            nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez supprimer ?{RESET} ❌\n")
+            task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez supprimer ?{RESET} ❌\n")
 
-        task = { "nom": nomTask }
+        task = { "nom": task_name }
         dbTask.tasks_collection.delete_one(task)
-        print(f"\n{RED}La tâche '{nomTask}' a été supprimé !{RESET} ✔\n")
+        print(f"\n{RED}La tâche '{task_name}' a été supprimé !{RESET} ✔\n")
 
 # Mettre à jour une tâche
 def updateTask():
-        nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez modifier ?{RESET} 🖊\n")
-        task = dbTask.tasks_collection.find_one({"nom": nomTask})
+        task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez modifier ?{RESET} 🖊\n")
+        task = dbTask.tasks_collection.find_one({"nom": task_name})
 
-        while not(dbTask.tasks_collection.find_one({"nom": nomTask})):
+        while not(dbTask.tasks_collection.find_one({"nom": task_name})):
             print(f"\n{WARNING}Cette tâche n'existe pas... Veuillez choisir une tâche qui existe pour la modifier{RESET} 👀\n")
-            nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez modifier ?{RESET} 🖊\n")
+            task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez modifier ?{RESET} 🖊\n")
 
-        new_task_name = input(f"{BOLD}Quel est le nouveau nom de cette tâche ? ?\n(Ancien nom : {nomTask}){RESET}\n")
+        new_task_name = input(f"{BOLD}Quel est le nouveau nom de cette tâche ? ?\n(Ancien nom : {task_name}){RESET}\n")
         while (dbTask.tasks_collection.find_one({"nom": new_task_name})):
             print(f"\n{WARNING}Cette tâche existe déjà... Veuillez choisir une tâche qui n'existe pas{RESET} 👀\n")
-            new_task_name = (f"{BOLD}Quel est le nouveau nom de cette tâche ? ?\n(Ancien nom : {nomTask}){RESET}\n")
+            new_task_name = (f"{BOLD}Quel est le nouveau nom de cette tâche ? ?\n(Ancien nom : {task_name}){RESET}\n")
 
-        new_status = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {nomTask} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
+        new_status = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {task_name} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
         while (new_status <1 or new_status >3):
             print(f"\n{WARNING}Le statut de la tâche doit être compris entre 1 et 3{RESET}\n")
-            new_status = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {nomTask} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
+            new_status = int(input(f"{BOLD}Quel est le nouveau statut de la tâche {task_name} ?\n(1 : A faire | 2 : En cours | 3 : Terminé){RESET}\n"))
              
         new_task = { "$set": { 'nom' : new_task_name, 'statut': new_status } }
         dbTask.tasks_collection.update_one(task, new_task)
-        print(f"\n{GREEN}Le nom de la tâche '{nomTask}' a été modifié en '{new_task_name}' !\nLe statut est passé de '{task['statut']}' a '{new_status} !{RESET} ✔\n")
+        print(f"\n{GREEN}Le nom de la tâche '{task_name}' a été modifié en '{new_task_name}' !\nLe statut est passé de '{task['statut']}' a '{new_status} !{RESET} ✔\n")
 
 # Compléter une tâche (la marquer comme terminée avec la date du jour)
 def completeTask():
-        nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez completer ?{RESET} 🟢\n")
+        task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez completer ?{RESET} 🟢\n")
 
-        while not(dbTask.tasks_collection.find_one({"nom": nomTask})):
+        while not(dbTask.tasks_collection.find_one({"nom": task_name})):
             print(f"\n{WARNING}Cette tâche n'existe pas... Veuillez choisir une tâche qui existe pour la completer{RESET} 👀\n")
-            nomTask = input(f"{BOLD}Quel est le nom de la tâche que vous voulez completer ?{RESET} 🟢\n")
+            task_name = input(f"{BOLD}Quel est le nom de la tâche que vous voulez completer ?{RESET} 🟢\n")
         
-        task = dbTask.tasks_collection.find_one({"nom": nomTask})
+        task = dbTask.tasks_collection.find_one({"nom": task_name})
 
         new_task_status = { "$set": { 'statut': 3, "date": str(dt.date.today())} }
         dbTask.tasks_collection.update_one(task, new_task_status)
-        print(f"\n{GREEN}La tâche '{nomTask}' a été complété !{RESET} ✔\n")
+        print(f"\n{GREEN}La tâche '{task_name}' a été complété !{RESET} ✔\n")
     
 def menu():
-    print(f"\n\033[1;36mBienvenue sur votre{RESET} \033[4;1;36mTo Do List{RESET} \033[1;36m{os.getenv("USERNAME")}{RESET} !\n")
-    print(f"{BOLD_UNDERLINE_PURPLE}Menu :\n{RESET}{BOLD}1-Affichez les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
+    print(f"{BOLD_UNDERLINE_PURPLE}Menu :\n{RESET}{BOLD}1-Afficher les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
 
     choice = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
     while(choice < 1 or choice > 5):
         print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 5{RESET}\n")
-        print(f"{BOLD_UNDERLINE_PURPLE}Menu :{RESET}\n{BOLD}1-Affichez les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
+        print(f"{BOLD_UNDERLINE_PURPLE}Menu :{RESET}\n{BOLD}1-Afficher les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
 
         choice = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
     match choice:
         case 1:
-            print(f"\n{BOLD_UNDERLINE_PURPLE}Menu (affichage) :{RESET}\n{BOLD}1-Affichez toutes les tâches\n2-Afficher les tâches à faire\n3-Afficher les tâches en cours\n4-Afficher les tâches complétées{RESET}\n")
+            print(f"\n{BOLD_UNDERLINE_PURPLE}Menu (affichage) :{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées{RESET}\n")
             choiceDisplay = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
-            while(choiceDisplay < 1 or choiceDisplay > 4):
+            while(choiceDisplay < 1 or choiceDisplay > 5):
                 print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 4{RESET}\n")
-                print(f"{BOLD_UNDERLINE_PURPLE}Menu (affichage) :{RESET}\n{BOLD}1-Affichez toutes les tâches\n2-Afficher les tâches à faire\n3-Afficher les tâches en cours\n4-Afficher les tâches complétées{RESET}\n")
+                print(f"\n{BOLD_UNDERLINE_PURPLE}Menu (affichage) :{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées{RESET}\n")
 
                 choiceDisplay = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
             match choiceDisplay:
                 case 1:
-                    displayTasks(dbTask.tasks)
+                    displayAllTasks(dbTask.tasks)
                 case 2:
-                    displayTasksChoice(dbTask.tasks, "à faire")
+                    displayTask()
                 case 3:
-                    displayTasksChoice(dbTask.tasks, "en cours")
+                    displayTasksChoice(dbTask.tasks, "à faire")
                 case 4:
+                    displayTasksChoice(dbTask.tasks, "en cours")
+                case 5:
                     displayTasksChoice(dbTask.tasks, "terminé")
         case 2:
             print(f"\n{BOLD_UNDERLINE_PURPLE}Menu (ajout) :{RESET}\n{BOLD}1-Ajouter une tâche (par défaut : 'à faire')\n2-Ajouter une tâche (avec n'importe quel statut : 'à faire'/'en cours'/'terminé')'{RESET}\n")
@@ -194,7 +213,7 @@ def redirection():
     time_redirection = 5
 
     for i in range(time_redirection):
-        print("Redirection vers ma page Linkedin dans " + str(time_redirection-i) + "s", end="\r")
+        print(f"{GREEN}Redirection vers ma page Linkedin dans {str(time_redirection-i)} s{RESET}", end="\r")
         time.sleep(1)
         i += 1
     webbrowser.open('https://www.linkedin.com/in/zineddine-beouche/')

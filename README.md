@@ -6,11 +6,13 @@ Une application simple et efficace de gestion de **To-Do List** en **Python** av
 
 ## 🚀 Fonctionnalités
 
+✔️ Affichage de toutes les tâches
+✔️ Affichage d'une tâche choisie par l'utilisateur
+✔️ Affichage des tâches avec différents statuts
 ✔️ Ajouter de nouvelles tâches  
 ✔️ Modifier des tâches existantes  
 ✔️ Marquer une tâche comme terminée  
-✔️ Supprimer des tâches  
-✔️ Affichage des tâches avec différents statuts  
+✔️ Supprimer des tâches   
 ✔️ Stockage persistant des tâches dans **MongoDB**  
 
 ---
@@ -43,7 +45,6 @@ Avant d'exécuter l'application, assurez-vous d'avoir installé :
     ```bash
     pip install pymongo
     ```
-
 ---
 
 ## 🔧 Configuration
@@ -60,8 +61,8 @@ Avant d'exécuter l'application, assurez-vous d'avoir installé :
    Si vous souhaitez **visualiser et gérer les données** plus facilement, vous pouvez installer **MongoDB Compass** et l'utiliser pour **importer le fichier `todolist.json`** manuellement :
    - Ouvrez **MongoDB Compass**  
    - Connectez-vous à votre base de données (`mongodb://localhost:27017/` par défaut)  
-   - Sélectionnez la base **todolist_db**  
-   - Allez dans l'onglet **tasks** et cliquez sur **Import Data**  
+   - Créez la base **todolist_db**  
+   - Créez la collection **tasks** et cliquez sur **Import Data**  
    - Sélectionnez le fichier **tasks.json** et importez-le  
 
 4. **Configurer la connexion MongoDB** :  
@@ -75,3 +76,4 @@ Lancez l'application en exécutant le fichier principal :
 
 ```bash
 python main.py
+```

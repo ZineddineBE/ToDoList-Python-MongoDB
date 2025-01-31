@@ -5,6 +5,8 @@ import os
 
 cont = True
 
+print(f"\033[1;36mBienvenue sur votre \033[4;1;36mTo Do List{function.RESET} \033[1;36m{os.getenv("USERNAME")} !{function.RESET}\n")
+
 while cont:
     function.menu()
     choice = input(f"\n{function.BOLD}Voulez-vous continuer ? (o/n) :{function.RESET} ").strip().lower()
