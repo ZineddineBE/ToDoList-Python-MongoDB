@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-import re
 
 # Requires the PyMongo package.
 # https://api.mongodb.com/python/current
@@ -10,7 +9,7 @@ tasks_collection = db['tasks']  # Sélection de la collection
 
 filter={}
 
-tasks = tasks_collection.find(
+tasks = list(tasks_collection.find(
   filter=filter,
-  sort=['nom']
-)
+  sort=[('nom')]
+))
