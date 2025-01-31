@@ -165,24 +165,24 @@ def completeTask():
         print(f"\n{GREEN}La tâche '{task_name}' a été complété !{RESET} ✔\n")
     
 def menu():
-    print(f"{BOLD_UNDERLINE_PURPLE}Menu:\n{RESET}{BOLD}1-Afficher les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
+    print(f"{BOLD_UNDERLINE_PURPLE}\nMenu:\n{RESET}{BOLD}1-Afficher les tâches [+]\n2-Ajouter une tâche [+]\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
 
     choice = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
     while(choice < 1 or choice > 5):
         print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 5{RESET}\n")
-        print(f"{BOLD_UNDERLINE_PURPLE}Menu:{RESET}\n{BOLD}1-Afficher les tâches\n2-Ajouter une tâche\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
+        print(f"{BOLD_UNDERLINE_PURPLE}\nMenu:{RESET}\n{BOLD}1-Afficher les tâches [+]\n2-Ajouter une tâche [+]\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche{RESET}\n")
 
         choice = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
     match choice:
         case 1:
-            print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (affichage):{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées{RESET}\n")
+            print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (affichage):{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées\n6-Retour au menu principal ←{RESET}\n")
             choiceDisplay = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
 
-            while(choiceDisplay < 1 or choiceDisplay > 5):
-                print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 5{RESET}\n")
-                print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (affichage):{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées{RESET}\n")
+            while(choiceDisplay < 1 or choiceDisplay > 6):
+                print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 6{RESET}\n")
+                print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (affichage):{RESET}\n{BOLD}1-Afficher toutes les tâches\n2-Afficher la tâche que vous souhaitez\n3-Afficher les tâches à faire\n4-Afficher les tâches en cours\n5-Afficher les tâches complétées\n6-Retour au menu principal ←{RESET}\n")
 
                 choiceDisplay = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
             match choiceDisplay:
@@ -196,13 +196,15 @@ def menu():
                     displayTasksChoice(dbTask.tasks, "en cours")
                 case 5:
                     displayTasksChoice(dbTask.tasks, "terminé")
+                case 6:
+                    menu()
         case 2:
-            print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (ajout):{RESET}\n{BOLD}1-Ajouter une tâche (par défaut : 'à faire')\n2-Ajouter une tâche (avec n'importe quel statut : 'à faire'/'en cours'/'terminé')'{RESET}\n")
+            print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (ajout):{RESET}\n{BOLD}1-Ajouter une tâche (par défaut : 'à faire')\n2-Ajouter une tâche (avec n'importe quel statut : 'à faire'/'en cours'/'terminé')'\n3-Retour au menu principal ←{RESET}\n")
             choiceAdd = int(input(f"{BOLD}Que voulez-vous faire ?\n"))
 
-            while(choiceAdd < 1 or choiceAdd > 2):
-                print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 4{RESET}\n")
-                print(f"{BOLD_UNDERLINE_PURPLE}Sous-menu (ajout):{RESET}\n{BOLD}1-Ajouter une tâche (par défaut : 'à faire')\n2-Ajouter une tâche (avec n'importe quel statut : 'à faire'/'en cours'/'terminé')'{RESET}\n")
+            while(choiceAdd < 1 or choiceAdd > 3):
+                print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 3{RESET}\n")
+                print(f"{BOLD_UNDERLINE_PURPLE}Sous-menu (ajout):{RESET}\n{BOLD}1-Ajouter une tâche (par défaut : 'à faire')\n2-Ajouter une tâche (avec n'importe quel statut : 'à faire'/'en cours'/'terminé')'\n3-Retour au menu principal ←{RESET}\n")
 
                 choiceAdd = int(input(f"{BOLD}Que voulez-vous faire ?{RESET}\n"))
             match choiceAdd:
@@ -210,6 +212,8 @@ def menu():
                     addTask()
                 case 2:
                     addTaskWithStatus()
+                case 3:
+                    menu()
         case 3:
             updateTask()
         case 4:
