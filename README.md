@@ -4,16 +4,16 @@ Une application simple et efficace de gestion de **To-Do List** en **Python** av
 
 ---
 
-## 🚀 Fonctionnalités
+🚀 **Fonctionnalités**
 
-✔️ Affichage de toutes les tâches
-✔️ Affichage d'une tâche choisie par l'utilisateur
-✔️ Affichage des tâches avec différents statuts
+✔️ Affichage de toutes les tâches  
+✔️ Affichage d'une tâche choisie par l'utilisateur  
+✔️ Affichage des tâches avec différents statuts  
 ✔️ Ajouter de nouvelles tâches  
 ✔️ Modifier des tâches existantes  
 ✔️ Marquer une tâche comme terminée  
-✔️ Supprimer des tâches   
-✔️ Stockage persistant des tâches dans **MongoDB**  
+✔️ Supprimer des tâches  
+✔️ Stockage persistant des tâches dans **MongoDB** 
 
 ---
 
