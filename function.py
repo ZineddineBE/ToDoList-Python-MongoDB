@@ -76,8 +76,6 @@ def displayTasksChoice(tasks, choice):
     else:
         print(f"\n{WARNING}Aucune tâche n'est {choice}.{RESET}")
 
-
-
 # Ajouter une tâche avec le statut 'à faire' par défaut
 def addTask():
 
