@@ -33,6 +33,9 @@ def displayTask():
 # Affiche toutes les taches
 def displayAllTasks(tasks):
     status = ""
+
+    count = dbTask.tasks_collection.count_documents({})
+
     for task in tasks:
         match task["statut"]:
             case 1:
@@ -41,9 +44,12 @@ def displayAllTasks(tasks):
                 status = "en cours"
             case 3:
                 status = "terminé"
-        print("--------------------------------------------------")
+
+        print("\n--------------------------------------------------")
         print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status})")
         print("--------------------------------------------------\n")
+    
+    print(f"\nIl y a {BOLD}{count} tâche(s){RESET} au total\n")
 
 # Affiche les taches selon le paramètre choice
 def displayTasksChoice(tasks, choice):
@@ -55,17 +61,22 @@ def displayTasksChoice(tasks, choice):
         case "terminé":
             status = 3
 
-    found = False  # Déclaré avant la boucle
+    count = dbTask.tasks_collection.count_documents({"statut": status})
 
+    found = False
     for task in tasks:
         if task["statut"] == status:
             found = True
+            print("\n--------------------------------------------------")
+            print(f"Tâche: {task['nom']}\nStatut: {task['statut']} ({choice})")
             print("--------------------------------------------------")
-            print(f"Tache: {task['nom']}\nStatut: {task['statut']} ({choice})")
-            print("--------------------------------------------------\n")
 
-    if not found:
-        print(f"{WARNING}Aucune tâche n'est {choice}.{RESET}")
+    if found:
+        print(f"\nIl y a {BOLD}{count} tâche(s){RESET} avec le statut {BOLD}'{choice}'{RESET}\n")
+    else:
+        print(f"\n{WARNING}Aucune tâche n'est {choice}.{RESET}")
+
+
 
 # Ajouter une tâche avec le statut 'à faire' par défaut
 def addTask():
