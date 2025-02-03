@@ -2,6 +2,8 @@ import connectiondb as dbTask
 import datetime as dt
 import webbrowser
 import time
+import json
+import csv
 import os
 
 # Définition des couleurs ANSI
@@ -14,6 +16,8 @@ RESET = "\033[0m"
 
 # Affiche toutes les taches
 def displayAllTasks(tasks):
+
+    date = None
 
     if len(tasks) == 0:
         print("\nAucune tâche à afficher.\n")
@@ -28,21 +32,24 @@ def displayAllTasks(tasks):
                 status = "en cours"
             case 3:
                 status = "terminé"
+                date = f"\nDate: {task["date"]}"
 
         print("\n--------------------------------------------------")
-        print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status})")
+        print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status}) {date}")
         print("--------------------------------------------------")
     
     print(f"\nIl y a {BOLD}{len(tasks)} tâche(s){RESET} au total\n")
 
-# Affiche toutes les taches
+# Affiche une tâche choisie par l'utilisateur
 def displayTask():
+    date = None
     task_name = input(f"\n{BOLD}Quelle est la tâche que vous voulez afficher ?{RESET}\n")
     while not(dbTask.tasks_collection.find_one({"nom": task_name})):
         print(f"\n{WARNING}Cette tâche n'existe pas... Veuillez choisir une tâche qui existe{RESET} 👀\n")
         task_name = input(f"Quelle est la tâche que vous voulez afficher ?\n")
 
     task = dbTask.tasks_collection.find_one({"nom": task_name})
+
     match task["statut"]:
         case 1:
             status = "à faire"
@@ -50,12 +57,16 @@ def displayTask():
             status = "en cours"
         case 3:
             status = "terminé"
+            date = f"\nDate: {task["date"]}"
+
     print("\n--------------------------------------------------")
-    print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status})")
+    print(f"Tache: {task["nom"]}\nStatut: {task["statut"]} ({status}) {date}")
     print("--------------------------------------------------")
 
 # Affiche les taches selon le paramètre choice
 def displayTasksChoice(tasks, choice):
+    date = ""
+
     match choice:
         case "à faire":
             status = 1
@@ -63,17 +74,19 @@ def displayTasksChoice(tasks, choice):
             status = 2
         case "terminé":
             status = 3
-
-    found = False
+            
+    count = 0
     for task in tasks:
         if task["statut"] == status:
-            found = True
+            count += 1
+            if status == 3:
+                date = f"\nDate: {task["date"]}"
             print("\n--------------------------------------------------")
-            print(f"Tâche: {task['nom']}\nStatut: {task['statut']} ({choice})")
+            print(f"Tâche: {task['nom']}\nStatut: {task['statut']} ({choice}) {date}")
             print("--------------------------------------------------")
 
-    if found:
-        print(f"\nIl y a {BOLD}{len(tasks)} tâche(s){RESET} avec le statut {BOLD}'{choice}'{RESET}\n")
+    if count > 0:
+        print(f"\nIl y a {BOLD}{count} tâche(s){RESET} avec le statut {BOLD}'{choice}'{RESET}\n")
     else:
         print(f"\n{WARNING}Aucune tâche n'est {choice}.{RESET}")
 
@@ -187,22 +200,59 @@ def completeTask():
     new_task_status = { "$set": { 'statut': 3, "date": str(dt.date.today())} }
     dbTask.tasks_collection.update_one(task, new_task_status)
     print(f"\n{GREEN}La tâche '{task_name}' a été complété !{RESET} ✅\n")
+
+# Exporte les tâches depuis la base de données au format CSV dans le dossier 'exported_tasks'
+# Le fichier CSV sera nommé 'exported_tasks.csv'
+def exportTasksToCSV():
+    tasks = list(dbTask.tasks_collection.find({}, {"_id": 0}))
+    
+    file_path = os.path.join('exported_tasks', 'exported_tasks.csv')
+
+    if not os.path.exists('exported_tasks'):
+        os.makedirs('exported_tasks')
+
+    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=["nom", "statut", "date"])
+        writer.writeheader()
+
+        for task in tasks:
+            writer.writerow({
+                "nom": task.get("nom", ""),
+                "statut": task.get("statut", ""),
+                "date": task.get("date", "")
+            })
+
+    print(f"\n{GREEN}Les tâches ont été exportées avec succès dans '{file_path}' ! ✅{RESET}")
+
+# Exporte les tâches depuis la base de données au format JSON dans le dossier 'exported_tasks'
+# Le fichier JSON sera nommé 'exported_tasks.json'
+def exportTasksToJSON():
+    tasks = list(dbTask.tasks_collection.find({}, {"_id": 0}))
+
+    if not os.path.exists('exported_tasks'):
+        os.makedirs('exported_tasks')
+
+    with open('exported_tasks/exported_tasks.json', 'w', encoding='utf-8') as file:
+        json.dump(tasks, file, ensure_ascii=False, indent=4)
+
+    print(f"\n{GREEN}Les tâches ont été exportées avec succès dans '{file}' ! ✅{RESET}")
+
     
 def menu():
     print(f"\033[\n1;36mBienvenue sur votre \033[4;1;36mTo Do List{RESET} \033[1;36m{os.getenv("USERNAME")} !{RESET}")
 
     while True:  # Boucle principale du menu
-        print(f"{BOLD_UNDERLINE_PURPLE}\nMenu:\n{RESET}{BOLD}1-Afficher les tâches [+]\n2-Ajouter une tâche [+]\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche\n6-Quitter 🚪{RESET}\n")
+        print(f"{BOLD_UNDERLINE_PURPLE}\nMenu:\n{RESET}{BOLD}1-Afficher les tâches [+]\n2-Ajouter une tâche [+]\n3-Modifier une tâche\n4-Supprimer une tâche\n5-Compléter une tâche\n6-Exporter [+]\n7-Quitter 🚪{RESET}\n")
 
         choice = input(f"{BOLD}Que voulez-vous faire ?{RESET}\n")
 
-        if not choice.isdigit() or int(choice) not in range(1, 7):
-            print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 6{RESET}\n")
+        if not choice.isdigit() or int(choice) not in range(1, 8):
+            print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 7{RESET}\n")
             continue  # Redemande un choix valide
 
         choice = int(choice)
 
-        if choice == 6:
+        if choice == 7:
             redirection()
             exit()
 
@@ -258,6 +308,25 @@ def menu():
             deleteTask()
         elif choice == 5:
             completeTask()
+        elif choice == 6: # Sous-menu exporter
+            while True:
+                print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (exporter):{RESET}\n{BOLD}1-Exporter au format CSV\n1-Exporter au format JSON\n3-Retour au menu principal ←{RESET}\n")
+
+                choiceExport = input(f"{BOLD}Que voulez-vous faire ?\n")
+
+                if not choiceExport.isdigit() or int(choiceExport) not in range(1, 4):
+                    print(f"\n{WARNING}Choix invalide, choisissez un chiffre compris entre 1 et 3{RESET}\n")
+                    continue
+
+                choiceExport = int(choiceExport)
+
+                if choiceExport == 3:
+                    break  # Retour au menu principal
+
+                if choiceExport == 1:
+                    exportTasksToCSV()
+                elif choiceExport == 2:
+                    exportTasksToJSON()
 
 # Redirection vers mon linkedin après 5s quand on décide de quitter le programme
 def redirection():
