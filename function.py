@@ -237,7 +237,7 @@ def exportTasksToJSON():
 
     print(f"\n{GREEN}Les tâches ont été exportées avec succès dans '{file}' ! ✅{RESET}")
 
-    
+# Menu interactif de l'application "To Do List".
 def menu():
     print(f"\033[\n1;36mBienvenue sur votre \033[4;1;36mTo Do List{RESET} \033[1;36m{os.getenv("USERNAME")} !{RESET}")
 
@@ -310,7 +310,7 @@ def menu():
             completeTask()
         elif choice == 6: # Sous-menu exporter
             while True:
-                print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (exporter):{RESET}\n{BOLD}1-Exporter au format CSV\n1-Exporter au format JSON\n3-Retour au menu principal ←{RESET}\n")
+                print(f"\n{BOLD_UNDERLINE_PURPLE}Sous-menu (exporter):{RESET}\n{BOLD}1-Exporter au format CSV\n2-Exporter au format JSON\n3-Retour au menu principal ←{RESET}\n")
 
                 choiceExport = input(f"{BOLD}Que voulez-vous faire ?\n")
 
